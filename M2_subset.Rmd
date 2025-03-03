@@ -1,0 +1,65 @@
+---
+title: "Mixed Effect Model"
+output: html_document
+date: "2025-03-03"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+```
+
+```{r} 
+
+m2_main <- read.csv(here("data", "new_clean_data", "data", "reprocessed_M2_data.csv"))
+
+m2_retag <- read.csv(here("data", "new_clean_data", "data", "socials_retagged_intention.csv"))
+
+```
+
+```{r}
+all_vars_colinear <- m2_main %>% 
+  select("age",
+    "gender.x",
+    "increase_the_perception_of_progress_on_an_issue",
+    "increase_knowledge_about_an_issue",
+    "demonstrating_work_or_success_with_partners",
+    "call_to_take_action_on_an_issue",
+    "promote_a_brand_or_product",
+    "doing_a_presentation",
+    "at_an_event_or_conference",
+    "in_situ_daily_life",
+    "being_interviewed",
+    "showing_work_being_done",
+    "data_visualisation",
+    "businessperson_politician_x_universal",
+    "expert_scientist_x_universal",
+    "influencer_celebrity_x_universal",
+    "bill_gates_x_universal",
+    "a_beneficiary_of_aid_x_universal",
+    "parents_x_universal",
+    "children_x_universal",
+    "women_only_no_men_at_all_x_universal",
+    "men_only_no_women_at_all_x_universal",
+    "men_and_women_x_universal",
+    "melinda_french_gates_x_universal",
+    "a_foundation_worker_or_local_partner_x_universal",
+    "content_type",
+    # "content_type_Social_Media",
+    # "content_type_Articles
+    "market",
+    #"market_in",
+    #"market_us",
+    #"market_uk"
+)
+
+library(here)
+
+write.csv(all_vars_colinear, here("data", "new_clean_data", "data", "all_vars_colinear.csv"), row.names = FALSE)
+
+```
+
