@@ -1,0 +1,76 @@
+---
+title: "Mixed Effect Regression Models"
+author: "Zain"
+date: "2025-03-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(marginaleffects)
+library(lme4)
+library(lmerTest)
+
+```
+
+```{r}
+
+video_data <- read.csv(here("data", "clean_data", "video_variables.csv"))
+
+```
+
+```{r}
+
+### look at ony uk 
+
+
+video_data_uk <- video_data %>%
+  filter(market == "uk")
+
+dv <- "issue"  
+random_effect <- "(1 | respondent_id)"  
+
+fixed_effects <- names(video_data_uk) %>%
+  setdiff(c("dependent_variable", "respondent_id", "market"))  
+
+fixed_effects_formula <- paste(fixed_effects, collapse = " + ")
+
+full_formula <- as.formula(paste(dv, "~", fixed_effects_formula, "+", random_effect))
+
+
+model_video_uk <- lmer(full_formula, data = video_data_uk)
+
+summary(model_video_uk)
+
+```
+
+```{r}
+
+### look at ony us 
+
+
+video_data_us <- video_data %>%
+  filter(market == "us")
+
+dv <- "issue"  
+random_effect <- "(1 | respondent_id)"  
+
+fixed_effects <- names(video_data_us) %>%
+  setdiff(c("dependent_variable", "respondent_id", "market"))  
+
+fixed_effects_formula <- paste(fixed_effects, collapse = " + ")
+
+full_formula <- as.formula(paste(dv, "~", fixed_effects_formula, "+", random_effect))
+
+
+model_video_us <- lmer(full_formula, data = video_data_us)
+
+summary(model_video_us)
+
+
+
