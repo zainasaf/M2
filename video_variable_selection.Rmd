@@ -1,0 +1,72 @@
+---
+title: "Video"
+author: "Zain"
+date: "2025-03-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(here)
+library(tidyverse)
+
+```
+
+```{r}
+
+m2_main <- read.csv(here("data", "new_clean_data", "data", "reprocessed_M2_data.csv"))
+
+
+video <- m2_main %>% select(
+    "respondent_id", 
+    "age",
+    "gender.x",
+    "issue",
+    "increase_the_perception_of_progress_on_an_issue",
+    "increase_knowledge_about_an_issue",
+    "demonstrating_work_or_success_with_partners",
+    "call_to_take_action_on_an_issue",
+    "promote_a_brand_or_product",
+    "authentic",
+    "informative_factual",
+    "serious",
+    "optimistic_happy",
+    "light.hearted_informal",
+    "urgent_shocking",
+    "sad_moving",
+    "relatable_unifying",
+    "doing_a_presentation",
+    "at_an_event_or_conference",
+    "in_situ_daily_life",
+    "being_interviewed",
+    "showing_work_being_done",
+    "data_visualisation",
+    "businessperson_politician_x_universal",
+    "expert_scientist_x_universal",
+    "influencer_celebrity_x_universal",
+    "bill_gates_x_universal",
+    "a_beneficiary_of_aid_x_universal",
+    "parents_x_universal",
+    "children_x_universal",
+    "women_only_no_men_at_all_x_universal",
+    "men_only_no_women_at_all_x_universal",
+    "men_and_women_x_universal",
+    "melinda_french_gates_x_universal",
+    "a_foundation_worker_or_local_partner_x_universal",
+    "text",
+    "has_animation",
+    "dynamic_filming",
+    "unseen_narrator",
+    "music",
+    "close.ups",
+    "seen_narrator",
+    "black_and_white",
+     "market"
+)
+
+
+write.csv(video, here("data", "clean_data", "video_variables.csv"), row.names = FALSE)
+
