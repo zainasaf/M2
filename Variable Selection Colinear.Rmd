@@ -1,8 +1,7 @@
 ---
-title: "Video"
-author: "Zain"
-date: "2025-03-04"
+title: "Mixed Effect Model"
 output: html_document
+date: "2025-03-03"
 ---
 
 ```{r setup, include=FALSE}
@@ -10,34 +9,36 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r}
-library(here)
 library(tidyverse)
+library(here)
+```
+
+```{r} 
+
+m2_main <- read.csv(here("data", "new_clean_data", "data", "reprocessed_M2_data.csv"))
+
+m2_retag <- read.csv(here("data", "new_clean_data", "data", "socials_retagged_intention.csv"))
 
 ```
 
 ```{r}
-
-m2_main <- read.csv(here("data", "new_clean_data", "data", "reprocessed_M2_data.csv"))
-
-
-video <- m2_main %>% select(
-    "respondent_id", 
-    "age",
+all_vars_colinear <- m2_main %>% 
+  select("age",
+         "issue",
+         "authentic",
+       "informative_factual",
+        "serious",
+       "optimistic_happy",
+      "light.hearted_informal",
+      "urgent_shocking",
+      "sad_moving",
+    "relatable_unifying",
     "gender.x",
-    "issue",
     "increase_the_perception_of_progress_on_an_issue",
     "increase_knowledge_about_an_issue",
     "demonstrating_work_or_success_with_partners",
     "call_to_take_action_on_an_issue",
     "promote_a_brand_or_product",
-    "authentic",
-    "informative_factual",
-    "serious",
-    "optimistic_happy",
-    "light.hearted_informal",
-    "urgent_shocking",
-    "sad_moving",
-    "relatable_unifying",
     "doing_a_presentation",
     "at_an_event_or_conference",
     "in_situ_daily_life",
@@ -56,28 +57,33 @@ video <- m2_main %>% select(
     "men_and_women_x_universal",
     "melinda_french_gates_x_universal",
     "a_foundation_worker_or_local_partner_x_universal",
-   ## "text",
-    "has_animation",
-    "dynamic_filming",
-    "unseen_narrator",
-    "music",
-    "close.ups",
-    "seen_narrator",
-    "black_and_white",
-     "market",
+    "content_type",
+   ## "content_type_Social_Media",
+    ## "content_type_Articles"
+    "market",
+    ##"market_in",
+    ##"market_us",
+    ##"market_uk",
     "health",
     "science_innovation",
-     "agriculture",
-      "education",
-      "development_issues",
-      "environment_climate_change",
-      "gender.y",
-      "length_seconds",
-      "trust", 
-      "inspiration"
-      
+    "agriculture",
+    "education",
+    "development_issues",
+    "environment_climate_change",
+    "gender.y", 
+    "text", 
+  ##  "respondent_id", 
+    "has_animation",
+    "dynamic_filming",
+     "unseen_narrator",
+      "music",
+      "close.ups",
+       "seen_narrator",
+       "black_and_white"
 )
 
 
-write.csv(video, here("data", "clean_data", "video_variables.csv"), row.names = FALSE)
+
+saveRDS(all_vars_colinear, here("data", "clean_data", "all_vars_colinear.rds"))
+
 

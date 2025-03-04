@@ -15,6 +15,7 @@ library(here)
 library(marginaleffects)
 library(lme4)
 library(lmerTest)
+library(modelsummary)
 
 ```
 
@@ -32,20 +33,20 @@ video_data <- read.csv(here("data", "clean_data", "video_variables.csv"))
 video_data_uk <- video_data %>%
   filter(market == "uk")
 
-dv <- "issue"  
+issue <- "issue"  
 random_effect <- "(1 | respondent_id)"  
 
 fixed_effects <- names(video_data_uk) %>%
-  setdiff(c("dependent_variable", "respondent_id", "market"))  
+  setdiff(c("issue", "respondent_id", "market", "trust", "inspiration"))  
 
 fixed_effects_formula <- paste(fixed_effects, collapse = " + ")
 
-full_formula <- as.formula(paste(dv, "~", fixed_effects_formula, "+", random_effect))
+full_formula_uk_trust <- as.formula(paste(issue, "~", fixed_effects_formula, "+", random_effect))
 
 
-model_video_uk <- lmer(full_formula, data = video_data_uk)
+model_video_uk_issue <- lmer(full_formula_uk_trust, data = video_data_uk)
 
-summary(model_video_uk)
+summary(model_video_uk_issue)
 
 ```
 
@@ -57,20 +58,204 @@ summary(model_video_uk)
 video_data_us <- video_data %>%
   filter(market == "us")
 
-dv <- "issue"  
+issue <- "issue"  
 random_effect <- "(1 | respondent_id)"  
 
 fixed_effects <- names(video_data_us) %>%
-  setdiff(c("dependent_variable", "respondent_id", "market"))  
+  setdiff(c("issue", "respondent_id", "market"))  
 
 fixed_effects_formula <- paste(fixed_effects, collapse = " + ")
 
-full_formula <- as.formula(paste(dv, "~", fixed_effects_formula, "+", random_effect))
+full_formula_us_trust <- as.formula(paste(issue, "~", fixed_effects_formula, "+", random_effect))
 
 
-model_video_us <- lmer(full_formula, data = video_data_us)
+model_video_us_issue <- lmer(full_formula_us_trust, data = video_data_us)
 
-summary(model_video_us)
+summary(model_video_us_issue)
+
+```
+
+
+```{r}
+
+
+## model with trust as DV for UK 
+video_data_uk <- video_data %>%
+  filter(market == "uk")
+
+trust <- "trust"  
+random_effect <- "(1 | respondent_id)"  
+
+fixed_effects_trust_uk <- names(video_data_uk) %>%
+  setdiff(c("trust", "respondent_id", "market", "issue", "inspiration"))  
+
+fixed_effects_formula_trust_uk <- paste(fixed_effects_trust_uk, collapse = " + ")
+
+
+full_formula_trust_uk <- as.formula(paste(trust, "~", fixed_effects_formula_trust_uk, "+", random_effect))
+
+model_video_uk_trust <- lmer(full_formula_trust_uk, data = video_data_uk)
+summary(model_video_uk_trust)
+
+
+```
+
+```{r}
+
+
+## model with trust as DV for US 
+
+
+
+trust <- "trust"  
+random_effect <- "(1 | respondent_id)"  
+
+fixed_effects_trust_us <- names(video_data_us) %>%
+  setdiff(c( "respondent_id", "market", "turst", "issue", "inspiration"))  
+
+fixed_effects_formula_trust_us <- paste(fixed_effects_trust_us, collapse = " + ")
+
+full_formula_trust_us <- as.formula(paste(trust, "~", fixed_effects_formula_trust_us, "+", random_effect))
+
+
+model_video_us_trust <- lmer(full_formula_trust_us, data = video_data_us)
+
+summary(model_video_us_trust)
+
+```
+
+```{r}
+## inspitation uk 
+
+video_data_uk <- video_data %>%
+  filter(market == "uk")
+
+inspiration <- "inspiration"  
+random_effect <- "(1 | respondent_id)"  
+
+fixed_effects_inspiration_uk <- names(video_data_uk) %>%
+  setdiff(c("trust", "respondent_id", "market", "issue", "inspiration"))  
+
+fixed_effects_formula_inspiration_uk <- paste(fixed_effects_inspiration_uk, collapse = " + ")
+
+
+full_formula_inspiration_uk <- as.formula(paste(inspiration, "~", fixed_effects_formula_inspiration_uk, "+", random_effect))
+
+model_video_uk_inspiration <- lmer(full_formula_trust_uk, data = video_data_uk)
+
+summary(model_video_uk_inspiration)
+
+```
+
+```{r}
+
+## inspitation uk 
+
+video_data_us <- video_data %>%
+  filter(market == "us")
+
+inspiration <- "inspiration"  
+random_effect <- "(1 | respondent_id)"  
+
+fixed_effects_inspiration_us <- names(video_data_us) %>%
+  setdiff(c("trust", "respondent_id", "market", "issue", "inspiration"))  
+
+fixed_effects_formula_inspiration_us <- paste(fixed_effects_inspiration_us, collapse = " + ")
+
+
+full_formula_inspiration_us <- as.formula(paste(inspiration, "~", fixed_effects_formula_inspiration_us, "+", random_effect))
+
+model_video_us_inspiration <- lmer(full_formula_trust_us, data = video_data_us)
+
+summary(model_video_us_inspiration)
+
+```
+
+```{r}
+
+## mdoel summary
+
+summary(model_video_uk_issue)
+
+
+
+summary(model_video_us_issue)
+
+summary(model_video_uk_trust)
+
+summary(model_video_us_trust)
+
+summary(model_video_uk_inspiration)
+
+summary(model_video_us_inspiration)
+
+
+
+
+
+
+
+
+
+
+```
+
+
+
+
+
+```{r}
+## check for random slopes  for UK ## 
+
+
+model_random_intercept_uk <- lmer(full_formula, data = video_data_uk, REML = FALSE)
+
+
+random_slope_results <- list()
+
+# Loop through each fixed effect to test random slopes
+for (predictor in fixed_effects) {
+  
+  # Define the formula for the Random Slope Model
+  random_slope_formula <- as.formula(
+    paste(dv, "~", fixed_effects_formula, "+", "(1 +", predictor, "| respondent_id)")
+  )
+  
+  # Fit the Random Slope Model
+  model_random_slope <- lmer(random_slope_formula, data = video_data_uk, REML = FALSE)
+  
+  # Perform Likelihood Ratio Test (LRT) to compare models
+  test_result <- anova(model_random_intercept, model_random_slope)
+  
+  # Store results in the list
+  random_slope_results[[predictor]] <- list(
+    "Chi-Square" = test_result$Chisq[2],
+    "p-value" = test_result$`Pr(>Chisq)`[2],
+    "AIC" = AIC(model_random_slope)
+  )
+  
+  # Print the result for this predictor
+  cat("\nTesting Random Slope for:", predictor, "\n")
+  print(test_result)
+}
+
+# Convert results into a data frame for better readability
+random_slope_df <- do.call(rbind, lapply(names(random_slope_results), function(var) {
+  c(Variable = var, random_slope_results[[var]])
+}))
+
+# Print summary of which predictors need random slopes
+print(random_slope_df)
+
+
+```
+
+
+
+```{r}
+## for VIF run logit regression model with 
+
+
 
 
 

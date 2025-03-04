@@ -24,7 +24,15 @@ m2_retag <- read.csv(here("data", "new_clean_data", "data", "socials_retagged_in
 ```{r}
 all_vars_colinear <- m2_main %>% 
   select("age",
-         "issue,
+         "issue",
+         "authentic",
+       "informative_factual",
+        "serious",
+       "optimistic_happy",
+      "light_hearted_informal",
+      "urgent_shocking",
+      "sad_moving",
+    "relatable_unifying",
     "gender.x",
     "increase_the_perception_of_progress_on_an_issue",
     "increase_knowledge_about_an_issue",
@@ -50,12 +58,19 @@ all_vars_colinear <- m2_main %>%
     "melinda_french_gates_x_universal",
     "a_foundation_worker_or_local_partner_x_universal",
     "content_type",
-    # "content_type_Social_Media",
-    # "content_type_Articles"
+   ## "content_type_Social_Media",
+    ## "content_type_Articles"
     "market",
-    #"market_in",
-    #"market_us",
-    #"market_uk"
+    ##"market_in",
+    ##"market_us",
+    ##"market_uk",
+    "health,
+    science_innovation,
+    agriculture,
+    education,
+    development_issues,
+    environment_climate_change,
+    gender.y
 )
 
 
